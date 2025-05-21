@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  postgres_db:
+    image: postgres:15 
+    container_name: my_postgres_lab_db
+    restart: always
+    environment:
+      POSTGRES_USER: lab_user
+      POSTGRES_PASSWORD: lab_password
+      POSTGRES_DB: lab_db
+    ports:
+      - "5432:5432" 
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data 
+      - ./init-db:/docker-entrypoint-initdb.d 
+      - ./mock_data_csvs:/csv_data 
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lab_user -d lab_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata: 
